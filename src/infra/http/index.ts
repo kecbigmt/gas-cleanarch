@@ -1,7 +1,8 @@
+import { HttpClient } from '@/_network/_modules/httpClient';
 import util from './_util';
 
-const infra = {
-  httpClient: {
+export namespace Http {
+  export const httpClient: HttpClient = {
     get: async (
       url: string,
       queryParams: { [key: string]: string | string[] } = {},
@@ -15,7 +16,5 @@ const infra = {
         json: async () => JSON.parse(response.getContentText()),
       };
     },
-  },
-};
-
-export default infra;
+  };
+}

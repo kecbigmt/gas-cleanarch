@@ -1,17 +1,15 @@
-import googleSheetsFunctionResolver, {
-  type SendgridCategoryStatsArgs,
-} from './adapters/controllers/googleSheetsFunctionResolver';
+import { GoogleSheetsSendgridFunctionResolver } from './controllers/GoogleSheetsSendgridFunctionResolver';
 
-import infra from './infra';
+import { Http } from './infra/http';
 
 const scriptProperties = PropertiesService.getScriptProperties();
 const sendgridApiKey = scriptProperties.getProperty('SENDGRID_API_KEY');
 
-async function SENDGRID_CATEGORY_STATS(...args: SendgridCategoryStatsArgs) {
-  return googleSheetsFunctionResolver.sendgrid.categoryStats(
+async function SENDGRID_CATEGORY_STATS(...args: GoogleSheetsSendgridFunctionResolver.CategoryStatsArgs) {
+  return GoogleSheetsSendgridFunctionResolver.categoryStats(
     {
       sendgridApiKey,
-      httpClient: infra.httpClient,
+      httpClient: Http.httpClient,
     },
     args
   );
