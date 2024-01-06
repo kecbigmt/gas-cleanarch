@@ -6,7 +6,7 @@ export namespace Http {
   export const httpClient: HttpClient = {
     get: async (
       url: string,
-      queryParams: { [key: string]: string | string[] } = {},
+      queryParams: { [key: string]: string | string[] | undefined } = {},
       headers: { [key: string]: string } = {}
     ) => {
       const queryString = util.makeQueryString(queryParams);

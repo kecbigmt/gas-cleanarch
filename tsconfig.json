@@ -4,6 +4,7 @@
     "target": "ES2019",
     "isolatedModules": true,
     "experimentalDecorators": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "strict": true
   }
 }

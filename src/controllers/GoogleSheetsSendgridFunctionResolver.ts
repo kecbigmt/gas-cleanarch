@@ -35,7 +35,7 @@ export namespace GoogleSheetsSendgridFunctionResolver {
       aggregatedBy,
     });
 
-    const metricsNames = [
+    const metricsNames: (keyof SendgridApi.StatsMetrics)[] = [
       'requests',
       'invalid_emails',
       'deferred',
@@ -58,10 +58,10 @@ export namespace GoogleSheetsSendgridFunctionResolver {
       SendgridApi.RetrieveCategoryStatsOutput[number]
     > = [
       aggregatedBy === 'day'
-        ? { columnName: 'day', valueAccessor: (obj) => obj['date'] }
+        ? { columnName: 'day', valueAccessor: (obj) => (obj as SendgridApi.CategoriesStatsDaily).date }
         : aggregatedBy === 'week'
-        ? { columnName: 'week', valueAccessor: (obj) => obj['week'] }
-        : { columnName: 'month', valueAccessor: (obj) => obj['month'] },
+        ? { columnName: 'week', valueAccessor: (obj) => (obj as SendgridApi.CategoriesStatsWeekly).week }
+        : { columnName: 'month', valueAccessor: (obj) => (obj as SendgridApi.CategoriesStatsMonthly).month },
       ...metricsNames.map((n) => ({
         columnName: n,
         valueAccessor: (obj: SendgridApi.RetrieveCategoryStatsOutput[number]) =>

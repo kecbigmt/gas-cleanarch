@@ -8,7 +8,7 @@ export namespace SendgridApi {
     httpClient: HttpClient;
   };
 
-  export async function retrieveCategoryStats (
+  export async function retrieveCategoryStats(
     { apiKey, httpClient }: Dependencies,
     { startDate, endDate, categories, aggregatedBy }: RetrieveCategoryStatsInput
   ): Promise<RetrieveCategoryStatsOutput> {
@@ -21,11 +21,11 @@ export namespace SendgridApi {
     const headers = {
       Authorization: 'Bearer ' + apiKey,
     };
-  
+
     return httpClient
       .get('https://api.sendgrid.com/v3/categories/stats', queryParams, headers)
       .then((r) => r.json<RetrieveCategoryStatsOutput>());
-  };
+  }
 
   export type RetrieveCategoryStatsInput = {
     startDate: ISO8601DateString;
@@ -33,7 +33,6 @@ export namespace SendgridApi {
     categories: string[];
     aggregatedBy?: 'day' | 'week' | 'month';
   };
-
 
   export type StatsMetrics = {
     blocks: number;
@@ -53,25 +52,31 @@ export namespace SendgridApi {
     unsubscribe_drops: number;
     unsubscribes: number;
   };
-  
+
   export type CategoryStats = {
     type: 'category';
     name: string;
     metrics: StatsMetrics;
   };
-  
+
+  export type CategoriesStatsDaily = {
+    date: string;
+    stats: CategoryStats[];
+  };
+
+  export type CategoriesStatsWeekly = {
+    week: string;
+    stats: CategoryStats[];
+  };
+
+  export type CategoriesStatsMonthly = {
+    month: string;
+    stats: CategoryStats[];
+  };
+
   export type RetrieveCategoryStatsOutput = (
-    | {
-        date: string;
-        stats: StatsMetrics;
-      }
-    | {
-        week: string;
-        stats: StatsMetrics;
-      }
-    | {
-        month: string;
-        stats: StatsMetrics;
-      }
+    | CategoriesStatsDaily
+    | CategoriesStatsWeekly
+    | CategoriesStatsMonthly
   )[];
-};
+}

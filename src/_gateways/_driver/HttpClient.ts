@@ -1,7 +1,7 @@
 export type HttpClient = {
   get: (
     url: string,
-    queryParams?: { [key: string]: string | string[] },
+    queryParams?: { [key: string]: string | string[] | undefined },
     headers?: { [key: string]: string }
   ) => Promise<{
     status: number;
