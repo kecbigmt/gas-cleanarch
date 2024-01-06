@@ -12,8 +12,8 @@ export namespace GoogleSheetsSendgridFunctionResolver {
 
   export type CategoryStatsArgs = [
     category: string,
-    startDate: string,
-    endDate?: string,
+    startDate: string | Date,
+    endDate?: string | Date,
     aggregatedBy?: string
   ];
 
@@ -23,8 +23,8 @@ export namespace GoogleSheetsSendgridFunctionResolver {
   ): Promise<GoogleSheetsExit.MatrixRange> {
     if (
       typeof category !== 'string' ||
-      typeof startDate !== 'string' ||
-      typeof endDate !== 'string' ||
+      (typeof startDate !== 'string' && !(startDate instanceof Date)) ||
+      (typeof endDate !== 'string' && !(endDate instanceof Date)) ||
       typeof aggregatedBy !== 'string'
     ) {
       throw new Error('input type error');
@@ -48,8 +48,8 @@ export namespace GoogleSheetsSendgridFunctionResolver {
   }
 
   export type GlobalStatsArgs = [
-    startDate: string,
-    endDate?: string,
+    startDate: string | Date,
+    endDate?: string | Date,
     aggregatedBy?: string
   ];
 
@@ -58,8 +58,8 @@ export namespace GoogleSheetsSendgridFunctionResolver {
     [startDate, endDate, aggregatedBy = 'day']: GlobalStatsArgs
   ): Promise<GoogleSheetsExit.MatrixRange> {
     if (
-      typeof startDate !== 'string' ||
-      typeof endDate !== 'string' ||
+      (typeof startDate !== 'string' && !(startDate instanceof Date)) ||
+      (typeof endDate !== 'string' && !(endDate instanceof Date)) ||
       typeof aggregatedBy !== 'string'
     ) {
       throw new Error('input type error');
