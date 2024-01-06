@@ -43,7 +43,7 @@ export namespace GoogleSheetsSendgridFunctionResolver {
 
     return GoogleSheetsExit.toMatrixRange<SendgridApi.StatsOnDate>(
       data,
-      createStatsSchema(aggregatedBy),
+      createStatsSchema(aggregatedBy)
     );
   }
 
@@ -77,7 +77,7 @@ export namespace GoogleSheetsSendgridFunctionResolver {
 
     return GoogleSheetsExit.toMatrixRange<SendgridApi.StatsOnDate>(
       data,
-      createStatsSchema(aggregatedBy),
+      createStatsSchema(aggregatedBy)
     );
   }
 
@@ -100,11 +100,14 @@ export namespace GoogleSheetsSendgridFunctionResolver {
     'unsubscribe_drops',
   ];
 
-  const createStatsSchema = (statsAggregationUnit: SendgridApi.statsAggregationUnit): GoogleSheetsExit.ToMatrixRangeSchema<SendgridApi.StatsOnDate> => ([
+  const createStatsSchema = (
+    statsAggregationUnit: SendgridApi.statsAggregationUnit
+  ): GoogleSheetsExit.ToMatrixRangeSchema<SendgridApi.StatsOnDate> => [
     { columnName: statsAggregationUnit, valueAccessor: (obj) => obj.date },
     ...metricsColumnNames.map((columnName) => ({
       columnName,
-      valueAccessor: (obj: SendgridApi.StatsOnDate) => obj.stats[0].metrics[columnName],
+      valueAccessor: (obj: SendgridApi.StatsOnDate) =>
+        obj.stats[0].metrics[columnName],
     })),
-  ]);
+  ];
 }

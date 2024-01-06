@@ -9,7 +9,9 @@ export namespace SendgridApi {
   };
 
   export type statsAggregationUnit = 'day' | 'week' | 'month';
-  export function assertStatsAggregationUnit(unit: string): asserts unit is statsAggregationUnit {
+  export function assertStatsAggregationUnit(
+    unit: string
+  ): asserts unit is statsAggregationUnit {
     if (unit !== 'day' && unit !== 'week' && unit !== 'month') {
       throw new Error('invalid aggregation unit: ' + unit);
     }
@@ -92,7 +94,7 @@ export namespace SendgridApi {
   export type StatsOnDate = {
     date: string;
     stats: Stats[];
-  }
+  };
 
   export type CategoriesStatsOnDate = StatsOnDate & {
     stats: CategoryStats[];
