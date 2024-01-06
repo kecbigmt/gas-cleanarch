@@ -16,7 +16,7 @@ export namespace SendgridApi {
     categories: string[];
     startDate: ISO8601DateString;
     endDate?: ISO8601DateString;
-    aggregatedBy?: statsAggregationUnit;
+    aggregatedBy?: StatsAggregationUnit;
   };
 
   export async function retrieveCategoryStats(
@@ -43,7 +43,7 @@ export namespace SendgridApi {
   export type RetrieveGlobalStatsInput = {
     startDate: ISO8601DateString;
     endDate?: ISO8601DateString;
-    aggregatedBy?: statsAggregationUnit;
+    aggregatedBy?: StatsAggregationUnit;
   };
 
   export async function retrieveGlobalStats(
@@ -72,10 +72,10 @@ export namespace SendgridApi {
   /**
    * Types
    */
-  export type statsAggregationUnit = 'day' | 'week' | 'month';
+  export type StatsAggregationUnit = 'day' | 'week' | 'month';
   export function assertStatsAggregationUnit(
     unit: string
-  ): asserts unit is statsAggregationUnit {
+  ): asserts unit is StatsAggregationUnit {
     if (unit !== 'day' && unit !== 'week' && unit !== 'month') {
       throw new Error('invalid aggregation unit: ' + unit);
     }
