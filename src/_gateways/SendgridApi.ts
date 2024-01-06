@@ -1,6 +1,6 @@
 import type { ISO8601DateString } from '../_application/_domain/_model/_entities/valueObjects';
 
-import type { HttpClient } from './_driver/HttpClient';
+import type { HttpClient, HttpRequestHeader } from './_driver/HttpClient';
 
 export namespace SendgridApi {
   export type Dependencies = {
@@ -18,9 +18,7 @@ export namespace SendgridApi {
       categories: categories,
       aggregated_by: aggregatedBy,
     };
-    const headers = {
-      Authorization: 'Bearer ' + apiKey,
-    };
+    const headers = constructHeader(apiKey);
 
     return httpClient
       .get('https://api.sendgrid.com/v3/categories/stats', queryParams, headers)
@@ -65,4 +63,8 @@ export namespace SendgridApi {
   };
 
   export type RetrieveCategoryStatsOutput = CategoriesStats[];
+
+  const constructHeader = (apiKey: string): HttpRequestHeader => ({
+    Authorization: 'Bearer ' + apiKey,
+  });
 }
