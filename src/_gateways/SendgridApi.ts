@@ -1,6 +1,6 @@
 import type { ISO8601DateString } from '../_application/_domain/_model/_entities/valueObjects';
 
-import type { HttpClient } from './_modules/httpClient';
+import type { HttpClient } from './_driver/HttpClient';
 
 export namespace SendgridApi {
   export type Dependencies = {
