@@ -7,16 +7,11 @@ export namespace SendgridApi {
     apiKey: string;
     httpClient: HttpClient;
   };
-
-  export type statsAggregationUnit = 'day' | 'week' | 'month';
-  export function assertStatsAggregationUnit(
-    unit: string
-  ): asserts unit is statsAggregationUnit {
-    if (unit !== 'day' && unit !== 'week' && unit !== 'month') {
-      throw new Error('invalid aggregation unit: ' + unit);
-    }
-  }
-
+  
+  /**
+   * Retrieve Email Statistics for Categories
+   * ref. https://docs.sendgrid.com/api-reference/categories/retrieve-email-statistics-for-categories
+   */
   export type RetrieveCategoryStatsInput = {
     categories: string[];
     startDate: ISO8601DateString;
@@ -40,7 +35,11 @@ export namespace SendgridApi {
       .get('https://api.sendgrid.com/v3/categories/stats', queryParams, headers)
       .then((r) => r.json<CategoriesStatsOnDate[]>());
   }
-
+  
+  /**
+   * Retrieve global email statistics
+   * ref. https://docs.sendgrid.com/api-reference/stats/retrieve-global-email-statistics
+   */
   export type RetrieveGlobalStatsInput = {
     startDate: ISO8601DateString;
     endDate?: ISO8601DateString;
@@ -61,6 +60,25 @@ export namespace SendgridApi {
     return httpClient
       .get('https://api.sendgrid.com/v3/stats', queryParams, headers)
       .then((r) => r.json<StatsOnDate[]>());
+  }
+
+  /**
+   * Utilities
+   */
+  const constructHeader = (apiKey: string): HttpRequestHeader => ({
+    Authorization: 'Bearer ' + apiKey,
+  });
+
+  /**
+   * Types
+   */
+  export type statsAggregationUnit = 'day' | 'week' | 'month';
+  export function assertStatsAggregationUnit(
+    unit: string
+  ): asserts unit is statsAggregationUnit {
+    if (unit !== 'day' && unit !== 'week' && unit !== 'month') {
+      throw new Error('invalid aggregation unit: ' + unit);
+    }
   }
 
   export type StatsMetrics = {
@@ -99,8 +117,4 @@ export namespace SendgridApi {
   export type CategoriesStatsOnDate = StatsOnDate & {
     stats: CategoryStats[];
   };
-
-  const constructHeader = (apiKey: string): HttpRequestHeader => ({
-    Authorization: 'Bearer ' + apiKey,
-  });
 }
