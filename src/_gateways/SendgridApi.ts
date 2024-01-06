@@ -8,10 +8,19 @@ export namespace SendgridApi {
     httpClient: HttpClient;
   };
 
+  export type statsAggregationUnit = 'day' | 'week' | 'month';
+
+  export type RetrieveCategoryStatsInput = {
+    categories: string[];
+    startDate: ISO8601DateString;
+    endDate?: ISO8601DateString;
+    aggregatedBy?: statsAggregationUnit;
+  };
+
   export async function retrieveCategoryStats(
     { apiKey, httpClient }: Dependencies,
     { startDate, endDate, categories, aggregatedBy }: RetrieveCategoryStatsInput
-  ): Promise<RetrieveCategoryStatsOutput> {
+  ): Promise<CategoriesStatsOnDate[]> {
     const queryParams = {
       start_date: startDate,
       end_date: endDate,
@@ -22,15 +31,30 @@ export namespace SendgridApi {
 
     return httpClient
       .get('https://api.sendgrid.com/v3/categories/stats', queryParams, headers)
-      .then((r) => r.json<RetrieveCategoryStatsOutput>());
+      .then((r) => r.json<CategoriesStatsOnDate[]>());
   }
 
-  export type RetrieveCategoryStatsInput = {
+  export type RetrieveGlobalStatsInput = {
     startDate: ISO8601DateString;
-    endDate: ISO8601DateString;
-    categories: string[];
-    aggregatedBy?: 'day' | 'week' | 'month';
+    endDate?: ISO8601DateString;
+    aggregatedBy?: statsAggregationUnit;
   };
+
+  export async function retrieveGlobalStats(
+    { apiKey, httpClient }: Dependencies,
+    { startDate, endDate, aggregatedBy }: RetrieveGlobalStatsInput
+  ): Promise<StatsOnDate[]> {
+    const queryParams = {
+      start_date: startDate,
+      end_date: endDate,
+      aggregated_by: aggregatedBy,
+    };
+    const headers = constructHeader(apiKey);
+
+    return httpClient
+      .get('https://api.sendgrid.com/v3/stats', queryParams, headers)
+      .then((r) => r.json<StatsOnDate[]>());
+  }
 
   export type StatsMetrics = {
     blocks: number;
@@ -51,18 +75,23 @@ export namespace SendgridApi {
     unsubscribes: number;
   };
 
-  export type CategoryStats = {
-    type: 'category';
-    name: string;
+  export type Stats = {
     metrics: StatsMetrics;
   };
 
-  export type CategoriesStats = {
-    date: string;
-    stats: CategoryStats[];
+  export type CategoryStats = Stats & {
+    type: 'category';
+    name: string;
   };
 
-  export type RetrieveCategoryStatsOutput = CategoriesStats[];
+  export type StatsOnDate = {
+    date: string;
+    stats: Stats[];
+  }
+
+  export type CategoriesStatsOnDate = StatsOnDate & {
+    stats: CategoryStats[];
+  };
 
   const constructHeader = (apiKey: string): HttpRequestHeader => ({
     Authorization: 'Bearer ' + apiKey,
