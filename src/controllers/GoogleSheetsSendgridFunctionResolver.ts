@@ -103,7 +103,7 @@ export namespace GoogleSheetsSendgridFunctionResolver {
   const createStatsSchema = (
     statsAggregationUnit: SendgridApi.StatsAggregationUnit
   ): GoogleSheetsExit.ToMatrixRangeSchema<SendgridApi.StatsOnDate> => [
-    { columnName: statsAggregationUnit, valueAccessor: (obj) => obj.date },
+    { columnName: statsAggregationUnit, valueAccessor: (obj) => obj.date, convertTo: 'date' },
     ...metricsColumnNames.map((columnName) => ({
       columnName,
       valueAccessor: (obj: SendgridApi.StatsOnDate) =>
