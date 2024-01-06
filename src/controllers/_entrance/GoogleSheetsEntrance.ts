@@ -1,4 +1,4 @@
-import { type ISO8601DateString } from '@/_application/_domain/_model/_entities/valueObjects';
+import { type ISO8601DateString } from '../../_application/_domain/_model/_entities/valueObjects';
 
 export namespace GoogleSheetsEntrance {
 

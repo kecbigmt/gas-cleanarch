@@ -1,4 +1,5 @@
-import { HttpClient } from '@/_gateways/_driver/HttpClient';
+import { HttpClient } from '../../_gateways/_driver/HttpClient';
+
 import util from './_util';
 
 export namespace Http {

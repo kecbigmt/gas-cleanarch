@@ -4,10 +4,6 @@
     "target": "ES2019",
     "isolatedModules": true,
     "experimentalDecorators": true,
-    "moduleResolution": "node",
-    "baseUrl": "./src",
-    "paths": {
-      "@/*": ["./*"]
-    }
+    "moduleResolution": "node"
   }
 }
