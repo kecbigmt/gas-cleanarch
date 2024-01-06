@@ -57,11 +57,7 @@ export namespace GoogleSheetsSendgridFunctionResolver {
     const schema: GoogleSheetsExit.ToMatrixRangeSchema<
       SendgridApi.RetrieveCategoryStatsOutput[number]
     > = [
-      aggregatedBy === 'day'
-        ? { columnName: 'day', valueAccessor: (obj) => (obj as SendgridApi.CategoriesStatsDaily).date }
-        : aggregatedBy === 'week'
-        ? { columnName: 'week', valueAccessor: (obj) => (obj as SendgridApi.CategoriesStatsWeekly).week }
-        : { columnName: 'month', valueAccessor: (obj) => (obj as SendgridApi.CategoriesStatsMonthly).month },
+      { columnName: aggregatedBy, valueAccessor: (obj) => obj.date },
       ...metricsNames.map((n) => ({
         columnName: n,
         valueAccessor: (obj: SendgridApi.RetrieveCategoryStatsOutput[number]) =>

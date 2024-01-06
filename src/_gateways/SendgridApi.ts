@@ -59,24 +59,10 @@ export namespace SendgridApi {
     metrics: StatsMetrics;
   };
 
-  export type CategoriesStatsDaily = {
+  export type CategoriesStats = {
     date: string;
     stats: CategoryStats[];
   };
 
-  export type CategoriesStatsWeekly = {
-    week: string;
-    stats: CategoryStats[];
-  };
-
-  export type CategoriesStatsMonthly = {
-    month: string;
-    stats: CategoryStats[];
-  };
-
-  export type RetrieveCategoryStatsOutput = (
-    | CategoriesStatsDaily
-    | CategoriesStatsWeekly
-    | CategoriesStatsMonthly
-  )[];
+  export type RetrieveCategoryStatsOutput = CategoriesStats[];
 }
