@@ -1,13 +1,17 @@
 {
   "compilerOptions": {
-    "lib": ["ES2019"],
-    "target": "ES2019",
-    "isolatedModules": true,
-    "experimentalDecorators": true,
+    "target": "ESNext",
+    "module": "ES6",
+    "strict": true,
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
     "baseUrl": "./src",
     "paths": {
       "@/*": ["./*"]
     }
-  }
+  },
+  "include": ["src"]
 }
