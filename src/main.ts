@@ -16,3 +16,16 @@ async function SENDGRID_CATEGORY_STATS(...args: GoogleSheetsSendgridFunctionReso
     args
   );
 }
+
+async function SENDGRID_GLOBAL_STATS(...args: GoogleSheetsSendgridFunctionResolver.GlobalStatsArgs) {
+  const sendgridApiKey = scriptProperties.getProperty('SENDGRID_API_KEY');
+  if (sendgridApiKey == null) throw new Error('SENDGRID_API_KEY is not set');
+
+  return GoogleSheetsSendgridFunctionResolver.globalStats(
+    {
+      sendgridApiKey,
+      httpClient: Http.httpClient,
+    },
+    args
+  );
+}
