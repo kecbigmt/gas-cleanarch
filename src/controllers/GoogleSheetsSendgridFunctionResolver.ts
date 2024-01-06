@@ -47,6 +47,40 @@ export namespace GoogleSheetsSendgridFunctionResolver {
     );
   }
 
+  export type GlobalStatsArgs = [
+    startDate: string,
+    endDate?: string,
+    aggregatedBy?: string
+  ];
+
+  export async function globalStats(
+    { sendgridApiKey, httpClient }: Dependencies,
+    [startDate, endDate, aggregatedBy = 'day']: GlobalStatsArgs
+  ): Promise<GoogleSheetsExit.MatrixRange> {
+    if (
+      typeof startDate !== 'string' ||
+      typeof endDate !== 'string' ||
+      typeof aggregatedBy !== 'string'
+    ) {
+      throw new Error('input type error');
+    }
+
+    SendgridApi.assertStatsAggregationUnit(aggregatedBy);
+
+    const deps = { apiKey: sendgridApiKey, httpClient };
+
+    const data = await SendgridApi.retrieveGlobalStats(deps, {
+      startDate: GoogleSheetsEntrance.toISO8601DateString(startDate),
+      endDate: GoogleSheetsEntrance.toISO8601DateString(endDate),
+      aggregatedBy,
+    });
+
+    return GoogleSheetsExit.toMatrixRange<SendgridApi.StatsOnDate>(
+      data,
+      createStatsSchema(aggregatedBy),
+    );
+  }
+
   const metricsColumnNames: (keyof SendgridApi.StatsMetrics)[] = [
     'requests',
     'invalid_emails',
