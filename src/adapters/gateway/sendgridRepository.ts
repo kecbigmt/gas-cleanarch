@@ -42,15 +42,15 @@ export type RetrieveCategoryStatsInput = {
 export type RetrieveCategoryStatsOutput = (
   | {
       date: string;
-      stats: SendgridCategoryStats;
+      stats: SendgridCategoryStats[];
     }
   | {
       week: string;
-      stats: SendgridCategoryStats;
+      stats: SendgridCategoryStats[];
     }
   | {
       month: string;
-      stats: SendgridCategoryStats;
+      stats: SendgridCategoryStats[];
     }
 )[];
 

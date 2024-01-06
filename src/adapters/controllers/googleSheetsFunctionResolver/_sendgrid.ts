@@ -1,5 +1,6 @@
 import sendgridRepository, {
   type RetrieveCategoryStatsOutput,
+  type SendgridStatsMetrics,
 } from '@/adapters/gateway/sendgridRepository';
 import type { HttpClient } from '@/adapters/gateway/httpClient';
 
@@ -42,7 +43,7 @@ const googleSheetsFunctionResolverSendgrid = {
       aggregatedBy,
     });
 
-    const metricsNames = [
+    const metricsNames: (keyof SendgridStatsMetrics)[] = [
       'requests',
       'invalid_emails',
       'deferred',
@@ -63,9 +64,12 @@ const googleSheetsFunctionResolverSendgrid = {
 
     const schema: ToMatrixRangeSchema<RetrieveCategoryStatsOutput[number]> = [
       aggregatedBy === 'day'
+      // @ts-ignore
         ? { columnName: 'day', valueAccessor: (obj) => obj['date'] }
         : aggregatedBy === 'week'
+      // @ts-ignore
         ? { columnName: 'week', valueAccessor: (obj) => obj['week'] }
+      // @ts-ignore
         : { columnName: 'month', valueAccessor: (obj) => obj['month'] },
       ...metricsNames.map((n) => ({
         columnName: n,

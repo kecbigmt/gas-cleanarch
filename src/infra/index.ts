@@ -1,10 +1,13 @@
+import { HttpClient } from '@/adapters/gateway/httpClient';
 import util from './_util';
 
-const infra = {
+const infra: {
+  httpClient: HttpClient,
+} = {
   httpClient: {
     get: async (
       url: string,
-      queryParams: { [key: string]: string | string[] } = {},
+      queryParams: { [key: string]: string | string[] | undefined } = {},
       headers: { [key: string]: string } = {}
     ) => {
       const queryString = util.makeQueryString(queryParams);
