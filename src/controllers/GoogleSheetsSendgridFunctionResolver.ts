@@ -1,8 +1,8 @@
 import { SendgridApi } from '@/_gateways/SendgridApi';
 import type { HttpClient } from '@/_gateways/_driver/HttpClient';
 
-import { GoogleSheetsEntrance } from './_modules/GoogleSheetsEntrance';
-import { GoogleSheetsExit } from './_modules/GoogleSheetsExit';
+import { GoogleSheetsEntrance } from './_entrance/GoogleSheetsEntrance';
+import { GoogleSheetsExit } from './_exit/GoogleSheetsExit';
 
 export namespace GoogleSheetsSendgridFunctionResolver {
   export async function categoryStats(
