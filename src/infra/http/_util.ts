@@ -1,5 +1,7 @@
+import { HttpRequestQueryParams } from '../../_gateways/_driver/HttpClient';
+
 const util = {
-  makeQueryString: (obj: { [key: string]: string | string[] | undefined }): string => {
+  makeQueryString: (obj: HttpRequestQueryParams): string => {
     return Object.keys(obj)
       .filter((key) => !!obj[key])
       .map((key) => {
