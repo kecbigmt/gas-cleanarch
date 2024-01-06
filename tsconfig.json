@@ -1,6 +1,13 @@
 {
   "compilerOptions": {
     "lib": ["ES2019"],
-    "experimentalDecorators": true
+    "target": "ES2019",
+    "isolatedModules": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["./*"]
+    }
   }
 }
