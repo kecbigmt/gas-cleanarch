@@ -5,8 +5,20 @@ import { GoogleSheetsEntrance } from './_entrance/GoogleSheetsEntrance';
 import { GoogleSheetsExit } from './_exit/GoogleSheetsExit';
 
 export namespace GoogleSheetsSendgridFunctionResolver {
+  export type Dependencies = {
+    sendgridApiKey: string;
+    httpClient: HttpClient;
+  };
+
+  export type CategoryStatsArgs = [
+    category: string,
+    startDate: string,
+    endDate?: string,
+    aggregatedBy?: string
+  ];
+
   export async function categoryStats(
-    { sendgridApiKey, httpClient }: CategoryStatsDeps,
+    { sendgridApiKey, httpClient }: Dependencies,
     [category, startDate, endDate, aggregatedBy = 'day']: CategoryStatsArgs
   ): Promise<GoogleSheetsExit.MatrixRange> {
     if (
@@ -18,13 +30,7 @@ export namespace GoogleSheetsSendgridFunctionResolver {
       throw new Error('input type error');
     }
 
-    if (
-      aggregatedBy !== 'day' &&
-      aggregatedBy !== 'week' &&
-      aggregatedBy !== 'month'
-    ) {
-      throw new Error('invalid aggregatedBy');
-    }
+    SendgridApi.assertStatsAggregationUnit(aggregatedBy);
 
     const deps = { apiKey: sendgridApiKey, httpClient };
 
@@ -35,51 +41,36 @@ export namespace GoogleSheetsSendgridFunctionResolver {
       aggregatedBy,
     });
 
-    const metricsNames: (keyof SendgridApi.StatsMetrics)[] = [
-      'requests',
-      'invalid_emails',
-      'deferred',
-      'processed',
-      'delivered',
-      'blocks',
-      'bounces',
-      'bounce_drops',
-      'clicks',
-      'unique_clicks',
-      'opens',
-      'unique_opens',
-      'spam_reports',
-      'spam_report_drops',
-      'unsubscribes',
-      'unsubscribe_drops',
-    ];
-
-    const schema: GoogleSheetsExit.ToMatrixRangeSchema<
-      SendgridApi.RetrieveCategoryStatsOutput[number]
-    > = [
-      { columnName: aggregatedBy, valueAccessor: (obj) => obj.date },
-      ...metricsNames.map((n) => ({
-        columnName: n,
-        valueAccessor: (obj: SendgridApi.RetrieveCategoryStatsOutput[number]) =>
-          obj.stats[0].metrics[n],
-      })),
-    ];
-
-    return GoogleSheetsExit.toMatrixRange<SendgridApi.RetrieveCategoryStatsOutput[number]>(
+    return GoogleSheetsExit.toMatrixRange<SendgridApi.StatsOnDate>(
       data,
-      schema
+      createStatsSchema(aggregatedBy),
     );
   }
 
-  export type CategoryStatsDeps = {
-    sendgridApiKey: string;
-    httpClient: HttpClient;
-  };
-
-  export type CategoryStatsArgs = [
-    category: string,
-    startDate: string,
-    endDate: string,
-    aggregatedBy?: string
+  const metricsColumnNames: (keyof SendgridApi.StatsMetrics)[] = [
+    'requests',
+    'invalid_emails',
+    'deferred',
+    'processed',
+    'delivered',
+    'blocks',
+    'bounces',
+    'bounce_drops',
+    'clicks',
+    'unique_clicks',
+    'opens',
+    'unique_opens',
+    'spam_reports',
+    'spam_report_drops',
+    'unsubscribes',
+    'unsubscribe_drops',
   ];
+
+  const createStatsSchema = (statsAggregationUnit: SendgridApi.statsAggregationUnit): GoogleSheetsExit.ToMatrixRangeSchema<SendgridApi.StatsOnDate> => ([
+    { columnName: statsAggregationUnit, valueAccessor: (obj) => obj.date },
+    ...metricsColumnNames.map((columnName) => ({
+      columnName,
+      valueAccessor: (obj: SendgridApi.StatsOnDate) => obj.stats[0].metrics[columnName],
+    })),
+  ]);
 }
