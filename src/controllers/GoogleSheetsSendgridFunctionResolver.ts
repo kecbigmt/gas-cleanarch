@@ -103,10 +103,13 @@ export namespace GoogleSheetsSendgridFunctionResolver {
   const createStatsSchema = (
     statsAggregationUnit: SendgridApi.StatsAggregationUnit
   ): GoogleSheetsExit.ToMatrixRangeSchema<SendgridApi.StatsOnDate> => [
-    { columnName: statsAggregationUnit, valueAccessor: (obj) => obj.date, convertTo: 'date' },
+    {
+      columnName: statsAggregationUnit,
+      getValue: (obj) => GoogleSheetsExit.toDateCellValue(obj.date),
+    },
     ...metricsColumnNames.map((columnName) => ({
       columnName,
-      valueAccessor: (obj: SendgridApi.StatsOnDate) =>
+      getValue: (obj: SendgridApi.StatsOnDate) =>
         obj.stats[0].metrics[columnName],
     })),
   ];

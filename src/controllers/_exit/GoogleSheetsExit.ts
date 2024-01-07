@@ -1,46 +1,24 @@
 export namespace GoogleSheetsExit {
-  
   export function toMatrixRange<T = object>(
     input: ToMatrixRangeInput<T>,
-    schema: ToMatrixRangeSchema<T>,
+    schema: ToMatrixRangeSchema<T>
   ): MatrixRange {
     return [
       schema.map(({ columnName }) => columnName),
-      ...input.map((obj) =>
-        schema.map(({ valueAccessor, convertTo }) => convert(valueAccessor(obj), convertTo))
-      ),
+      ...input.map((obj) => schema.map(({ getValue }) => getValue(obj))),
     ];
-  };
+  }
 
   export type ToMatrixRangeInput<T = object> = Array<T>;
-  
+
   export type ToMatrixRangeSchema<T = object> = {
     columnName: string;
-    valueAccessor: (
-      obj: T
-    ) => string | number | boolean | null;
-    convertTo?: 'date';
+    getValue: (obj: T) => CellValue;
   }[];
-  
-  export type MatrixRange = Array<
-    Array<CellValue>
-  >;
 
-  type ConvertTo = 'date';
+  export type MatrixRange = Array<Array<CellValue>>;
+  export type CellValue = string | number | boolean | Date | null;
 
-  type CellValue = string | number | boolean | Date | null;
-
-  const toDate = (value: number | string): Date => new Date(value);
-
-  function convert(value: number | string | boolean | null, to?: ConvertTo): any {
-    switch (to) {
-      case 'date':
-        if (typeof value !== 'number' && typeof value !== 'string') {
-          throw new Error('unexpected data type');
-        }
-        return toDate(value);
-      default:
-        return value;
-    }
-  }
-};
+  export const toDateCellValue = (value: string | number | Date): Date =>
+    new Date(value);
+}
